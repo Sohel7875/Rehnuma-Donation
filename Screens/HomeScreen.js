@@ -5,7 +5,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { SliderBox } from "react-native-image-slider-box";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
@@ -13,6 +12,7 @@ import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import img from '../assets/image.jpg'
 import Card from "../Components/Card";
+import CarouselPage from '../Components/CarouselPage';
 
 const HomeScreen = () => {
 
@@ -29,9 +29,20 @@ const HomeScreen = () => {
       name: "Deals",
     }
   ];
-  const images = [
-    img, img, img, img, img, img, img, img, img
-  ];
+//   const images = [
+//     {
+//         id:1,
+//         image:require( '../assets/image.jpg')
+//     },
+//     {
+//         id:2,
+//         image:require( '../assets/image.jpg')
+//     },
+//     {
+//         id:3,
+//         image:require( '../assets/image.jpg')
+//     },
+// ];
 
   const [students, setStudents] = useState([]);
   const navigation = useNavigation();
@@ -40,9 +51,11 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/students");
+        const response = await axios.get("http:192.168.245.200:8000/students");
         setStudents(response.data.beneficiaries);
+        // console.log(response.data)
       } catch (error) {
+        console.log(error)
       }
     };
 
@@ -60,7 +73,7 @@ const HomeScreen = () => {
   //   fetchUser();
   // }, []);
 
-
+console.log(students)
 
 
   return (
@@ -115,14 +128,15 @@ const HomeScreen = () => {
 
 
               <ScrollView>
-                <SliderBox images={images}
-                  autoplay
 
+                <CarouselPage />
+                {/* <SliderBox images={images.image}
+                  autoplay
                   circleloop
                   paginationBoxVerticalPadding={20}
                   dotColor={"white"}
                   inactiveDotColor={"#9084ae"}
-                  ImageComponentStyle={{ width: '100%' }} />
+                  ImageComponentStyle={{ width: '100%' }} /> */}
 
 
               </ScrollView>
@@ -140,7 +154,7 @@ const HomeScreen = () => {
             </View>
             
           </ScrollView>
-          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "column", gap: 5, paddingVertical: 10, paddingHorizontal: 10 }}>
+          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ gap: 5, paddingVertical: 10,  }}>
           {
 students.length>0 &&(
   students.map((data,index) =>{
@@ -148,6 +162,82 @@ students.length>0 &&(
   })
 )
  }
+          </ScrollView>
+
+          <ScrollView>
+            <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
+              <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Engineers</Text>
+            <Pressable
+            onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students, sorted:true,field:'Engineering'})}}}
+             style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
+              <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
+              <MaterialIcons name="arrow-right" size={30} color="black" />
+            </Pressable>
+
+            </View>
+            
+          </ScrollView>
+          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "row", gap: 5, paddingVertical: 10, }}>
+
+       
+            {/* {products
+              ?.filter((item) => item.field === category)
+              .map((item, index) => (
+                <ProductItem item={item} key={index} />
+              ))} */}
+
+
+              {students.length >0 &&(
+               students
+               ?.filter((item) => item.field === 'Engineering')
+               .map((item, index) => (
+                 <Card data={item} key={index} />
+               ))
+              )}
+                {/* <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card /> */}
+    
+          </ScrollView>
+          <ScrollView>
+            <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
+              <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Doctors</Text>
+            <Pressable
+            onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students, sorted:true,field:'Doctor'})}}}
+            style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
+              <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
+              <MaterialIcons name="arrow-right" size={30} color="black" />
+            </Pressable>
+
+            </View>
+            
+          </ScrollView>
+          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "row", gap: 5, paddingVertical: 10, }}>
+
+       
+            {/* {products
+              ?.filter((item) => item.field === category)
+              .map((item, index) => (
+                <ProductItem item={item} key={index} />
+              ))} */}
+
+{students.length >0 &&(
+               students
+               ?.filter((item) => item.field === 'Engineering')
+               .map((item, index) => (
+                 <Card data={item} key={index} />
+               ))
+              )}
+                {/* <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card /> */}
+    
           </ScrollView>
 
           </ScrollView>
@@ -170,6 +260,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     // margin: '2%', 
     marginTop:10,
+    height:210,
     overflow:"hidden",
     borderRadius: 20,
   },
