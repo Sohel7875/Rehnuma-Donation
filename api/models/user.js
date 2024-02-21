@@ -19,22 +19,11 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   verificationToken: String,
-  addresses: [
-    {
-      name: String,
-      mobileNo: String,
-      houseNo: String,
-      street: String,
-      landmark: String,
-      city: String,
-      country: String,
-      postalCode: String,
-    },
-  ],
-  orders: [
+
+  donation: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+      ref: "Donation",
     },
   ],
   createdAt: {

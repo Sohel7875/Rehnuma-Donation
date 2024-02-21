@@ -43,7 +43,7 @@ const CarouselPage = () => {
 
     const getItemLayout = (data, index) => ({
         length: screenWidth,
-        offset: screenWidth * index,
+        offset: (screenWidth-20) * index,
         index: index,
     })
 
@@ -51,8 +51,8 @@ const CarouselPage = () => {
 
     const renderItem = ({ item, index }) => {
         return (
-            <View key={index}>
-                <Image source={item.image} style={{ height: 220, width: screenWidth }} />
+            <View key={index} style={{ width: screenWidth-20}}>
+                <Image source={item.image} style={{ height: 220, width: screenWidth-20 }} />
             </View>
         )
     }

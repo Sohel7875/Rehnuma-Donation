@@ -20,14 +20,13 @@ const DetailTable = () => {
             ['Field', studentData.field],
         ],
     };
-
-
 const [data,setData] = useState(tableData)
+const state = this.state
   return (
     <View style={styles.container}>
-    <Table borderStyle={{ borderWidth: 1, borderColor: 'black' }}>
-        <Row data={data.tableHead} style={styles.head} textStyle={{ fontSize: 20, fontWeight: 'bold' , textAlign: 'center', color: 'white' }} />
-        <Rows data={data.tableData} textStyle={ [{ margin: 6, fontSize: 16, fontWeight: 'bold' , textAlign: 'center' }]} />
+    <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+        <Row data={data.tableHead} style={styles.head} textStyle={styles.text} />
+        <Rows data={data.tableData} textStyle={styles.text} />
     </Table>
 </View>
   )
@@ -37,9 +36,8 @@ export default DetailTable
 
 const styles = StyleSheet.create({
 
-    container: { flex: 1, padding: 10, justifyContent: 'center', backgroundColor: '#fff',},
-    head: { height: 44, backgroundColor: '#580ff5' },
+    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+    head: { height: 40, backgroundColor: '#f1f8ff' },
     headText: { fontSize: 20, fontWeight: 'bold' , textAlign: 'center', color: 'white' },
-    text: { margin: 6, fontSize: 16, fontWeight: 'bold' , textAlign: 'center' },
-
+    text: { margin: 6 }
 })

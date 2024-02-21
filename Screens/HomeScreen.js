@@ -13,8 +13,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import img from '../assets/image.jpg'
 import Card from "../Components/Card";
 import CarouselPage from '../Components/CarouselPage';
+import SearchResult from './SearchResult';
+import Loader from '../Components/Loader';
 
 const HomeScreen = () => {
+
+
+  
 
   const list = [
     {
@@ -47,14 +52,18 @@ const HomeScreen = () => {
   const [students, setStudents] = useState([]);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [query, setQuery] = useState('')
+  const [loader, setLoader] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http:192.168.245.200:8000/students");
+        const response = await axios.get("http:192.168.193.200:8000/students");
         setStudents(response.data.beneficiaries);
+        setLoader(false)
         // console.log(response.data)
       } catch (error) {
+        setLoader(false)
         console.log(error)
       }
     };
@@ -73,7 +82,6 @@ const HomeScreen = () => {
   //   fetchUser();
   // }, []);
 
-console.log(students)
 
 
   return (
@@ -83,166 +91,177 @@ console.log(students)
         backgroundColor: "white",
         paddingTop: 50
       }}>
-        <ScrollView>
+      {
+        loader?<Loader />: <ScrollView>
 
-          <ScrollView style={{ flex: 1, flexDirection: "column", gap: 5, paddingVertical: 10, paddingHorizontal: 10 }}>
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }}>
-              <View>
-                <Text style={{ fontWeight: 600 }}>Hello !</Text>
-                <Text style={{ fontWeight: 900, fontSize: 20 }}>Ibrahim</Text>
-              </View>
-              <AntDesign
-                style={{ paddingLeft: 10 }}
-                name="search1"
-                size={22}
-                color="#580ff5"
-              />
+        <ScrollView style={{ flex: 1, flexDirection: "column", gap: 5, paddingVertical: 10, paddingHorizontal: 10 }}>
+          <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }}>
+            <View>
+              <Text style={{ fontWeight: 600 }}>Hello !</Text>
+              <Text style={{ fontWeight: 900, fontSize: 20 }}>Ibrahim</Text>
             </View>
-            <Pressable style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginHorizontal: 7,
-              gap: 10,
-              backgroundColor: "#f0f0f0",
-              marginVertical: 20,
-              marginHorizontal: 15,
-              borderRadius: 3,
-              height: 38,
-              flex: 1,
-              paddingVertical: 5,
-              borderRadius: 15
+            <AntDesign
+              style={{ paddingLeft: 10 }}
+              name="search1"
+              size={22}
+              color="#580ff5"
+            />
+          </View>
+          <Pressable 
+           onPress={()=>{if(students.length>0){navigation.navigate("SearchResult",{item:students,searchinput:query})}}}
+
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginHorizontal: 7,
+            gap: 10,
+            backgroundColor: "#f0f0f0",
+            marginVertical: 20,
+            marginHorizontal: 15,
+            borderRadius: 3,
+            height: 38,
+            flex: 1,
+            paddingVertical: 5,
+            borderRadius: 15
 
 
-            }}>
-              <AntDesign
-                style={{ paddingLeft: 10 }}
-                name="search1"
-                size={22}
-                color="black"
-              />
-              <TextInput placeholder="Search Students..." style={{ width: "100%" }} />
-            </Pressable>
+          }}>
+            <AntDesign
+              style={{ paddingLeft: 10 }}
+              name="search1"
+              size={22}
+              color="black"
+            />
+            <TextInput placeholder="Search Students..." style={{ width: "100%" }} onChangeText={(value) =>setQuery(value)} 
+           
+           onSubmitEditing={() => {
+            if (students.length > 0 && query.length>0) {
+              navigation.navigate("SearchResult", { item: students, searchinput: query });
+            }
+          }}/>
+          </Pressable>
 
-            <View style={styles.shadowProp}>
-
-
-
-              <ScrollView>
-
-                <CarouselPage />
-                {/* <SliderBox images={images.image}
-                  autoplay
-                  circleloop
-                  paginationBoxVerticalPadding={20}
-                  dotColor={"white"}
-                  inactiveDotColor={"#9084ae"}
-                  ImageComponentStyle={{ width: '100%' }} /> */}
+          <View style={styles.shadowProp}>
 
 
-              </ScrollView>
-            </View>
-            <ScrollView>
-            <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
-              <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Donations</Text>
-            <Pressable
-            onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students,sorted:false,field:''})}}}
-             style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
-              <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
-              <MaterialIcons name="arrow-right" size={30} color="black" />
-            </Pressable>
 
-            </View>
-            
-          </ScrollView>
-          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ gap: 5, paddingVertical: 10,  }}>
-          {
+            <ScrollView >
+
+              <CarouselPage />
+              {/* <SliderBox images={images.image}
+                autoplay
+                circleloop
+                paginationBoxVerticalPadding={20}
+                dotColor={"white"}
+                inactiveDotColor={"#9084ae"}
+                ImageComponentStyle={{ width: '100%' }} /> */}
+
+
+            </ScrollView>
+          </View>
+          <ScrollView>
+          <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
+            <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Donations</Text>
+          <Pressable
+           onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students,sorted:false,field:''})}}}
+           style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
+            <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
+            <MaterialIcons name="arrow-right" size={30} color="black" />
+          </Pressable>
+
+          </View>
+          
+        </ScrollView>
+        <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ gap: 5, paddingVertical: 10,  }}>
+        {
 students.length>0 &&(
-  students.map((data,index) =>{
-   return <Card key={index} data= {data} />
-  })
+students.map((data,index) =>{
+ return <Card key={index} data= {data} />
+})
 )
- }
-          </ScrollView>
+}
+        </ScrollView>
 
-          <ScrollView>
-            <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
-              <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Engineers</Text>
-            <Pressable
-            onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students, sorted:true,field:'Engineering'})}}}
-             style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
-              <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
-              <MaterialIcons name="arrow-right" size={30} color="black" />
-            </Pressable>
+        <ScrollView>
+          <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
+            <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Engineers</Text>
+          <Pressable
+          onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students, sorted:true,field:'Engineering'})}}}
+           style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
+            <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
+            <MaterialIcons name="arrow-right" size={30} color="black" />
+          </Pressable>
 
-            </View>
-            
-          </ScrollView>
-          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "row", gap: 5, paddingVertical: 10, }}>
+          </View>
+          
+        </ScrollView>
+        <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "row", gap: 5, paddingVertical: 10, }}>
 
-       
-            {/* {products
-              ?.filter((item) => item.field === category)
-              .map((item, index) => (
-                <ProductItem item={item} key={index} />
-              ))} */}
+     
+          {/* {products
+            ?.filter((item) => item.field === category)
+            .map((item, index) => (
+              <ProductItem item={item} key={index} />
+            ))} */}
 
 
-              {students.length >0 &&(
-               students
-               ?.filter((item) => item.field === 'Engineering')
-               .map((item, index) => (
-                 <Card data={item} key={index} />
-               ))
-              )}
-                {/* <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card /> */}
-    
-          </ScrollView>
-          <ScrollView>
-            <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
-              <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Doctors</Text>
-            <Pressable
-            onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students, sorted:true,field:'Doctor'})}}}
-            style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
-              <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
-              <MaterialIcons name="arrow-right" size={30} color="black" />
-            </Pressable>
+            {students.length >0 &&(
+             students
+             ?.filter((item) => item.field === 'Engineering')
+             .map((item, index) => (
+               <Card data={item} key={index} />
+             ))
+            )}
+              {/* <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card /> */}
+  
+        </ScrollView>
+        <ScrollView>
+          <View  style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }} >
+            <Text style={{fontSize:18,fontWeight:700,color:'black'}}>Doctors</Text>
+          <Pressable
+          onPress={()=>{if(students.length>0){navigation.navigate("Full",{item:students, sorted:true,field:'Medical'})}}}
+          style={{flexDirection:"row",alignItems:"center", marginVertical:20}}>
+            <Text style={{fontSize:16,fontWeight:600,color:'#580ff5'}}>See all</Text>
+            <MaterialIcons name="arrow-right" size={30} color="black" />
+          </Pressable>
 
-            </View>
-            
-          </ScrollView>
-          <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "row", gap: 5, paddingVertical: 10, }}>
+          </View>
+          
+        </ScrollView>
+        <ScrollView horizontal  showsHorizontalScrollIndicator={false}  style={{ flex: 1, flexDirection: "row", gap: 5, paddingVertical: 10, }}>
 
-       
-            {/* {products
-              ?.filter((item) => item.field === category)
-              .map((item, index) => (
-                <ProductItem item={item} key={index} />
-              ))} */}
+     
+          {/* {products
+            ?.filter((item) => item.field === category)
+            .map((item, index) => (
+              <ProductItem item={item} key={index} />
+            ))} */}
 
 {students.length >0 &&(
-               students
-               ?.filter((item) => item.field === 'Engineering')
-               .map((item, index) => (
-                 <Card data={item} key={index} />
-               ))
-              )}
-                {/* <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card /> */}
-    
-          </ScrollView>
-
-          </ScrollView>
+             students
+             ?.filter((item) => item.field === 'Medical')
+             .map((item, index) => (
+               <Card data={item} key={index} />
+             ))
+            )}
+              {/* <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card /> */}
+  
+        </ScrollView>
 
         </ScrollView>
+
+      </ScrollView>
+      }
 
       </SafeAreaView>
 

@@ -8,10 +8,13 @@ import RagisterScreen from '../Screens/RagisterScreen'
 import HomeScreen from '../Screens/HomeScreen'
 import ProfileScreen from '../Screens/ProfileScreen';
 import CarouselPage from '../Components/CarouselPage';
+import Order from '../Screens/Order';
 
 
 import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import StudentInfoScreen from '../Screens/StudentInfoScreen';
+import Fullpage from '../Screens/Fullpage';
+import SearchResult from '../Screens/SearchResult';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -29,9 +32,9 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="home" />
+                <Entypo name="home" size={24} color='#008E97'/>
               ) : (
-                <AntDesign name="home" />
+                <AntDesign name="home" size={24} color='black'/>
               ),
           }}
         />
@@ -44,9 +47,9 @@ const StackNavigator = () => {
             tabBarLabelStyle: { color: "#008E97" },
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Ionicons name="person"/>
+                <Ionicons name="person" size={24} color='#008E97'/>
               ) : (
-                <Ionicons name="person-outline" />
+                <Ionicons name="person-outline" size={24}/>
               ),
           }}
         />
@@ -56,7 +59,7 @@ const StackNavigator = () => {
   }
   return <NavigationContainer>
 
-    <Stack.Navigator initialRouteName='Main'>
+    <Stack.Navigator initialRouteName='Login'>
 
 
       <Stack.Screen
@@ -80,10 +83,25 @@ const StackNavigator = () => {
           component={StudentInfoScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Order"
+          component={Order}
+          options={{ headerShown: false }}
+        />
 
         <Stack.Screen
           name="Main"
           component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Full"
+          component={Fullpage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SearchResult"
+          component={SearchResult}
           options={{ headerShown: false }}
         />
 
